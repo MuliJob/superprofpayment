@@ -65,22 +65,27 @@
     .card-number-wrapper {
         position: relative;
     }
-    
-    .visa-logo {
-        display: grid;
+
+    .card-logos {
         position: absolute;
-        right: 15px;
         top: 50%;
+        right: 15px;
         transform: translateY(-50%);
-        width: 48px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .card-logo {
+        width: 40px;
         height: auto;
+        opacity: 0.8;
         pointer-events: none;
         user-select: none;
-        opacity: 0.8;
         transition: opacity 0.3s ease;
     }
-    
-    .card-number-wrapper:focus-within .visa-logo {
+
+    .card-number-wrapper:focus-within .card-logo {
         opacity: 1;
     }
     
@@ -245,9 +250,10 @@
     <label for="{{ form.card_number.id_for_label }}">Card Number</label>
     <div class="card-number-wrapper">
         {{ form.card_number }}
-        <img class="visa-logo" src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa Logo" />
-        <img class="visa-logo" src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard Logo" />
-
+        <div class="card-logos">
+            <img class="card-logo" src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa Logo" />
+            <img class="card-logo" src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard Logo" />
+        </div>
     </div>
     {% if form.card_number.errors %}
         <ul class="field-errors">
