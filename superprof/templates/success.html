@@ -1,6 +1,6 @@
-{% extends 'refund/base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Superprof - Refund Request Submitted{% endblock %}
+{% block title %}Superprof - Payment Request Submitted{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -78,8 +78,8 @@
     <h1 class="success-title">Request Submitted Successfully!</h1>
     <div class="success-message">
         <p><strong>Thank you!</strong></p>
-        <p>Your refund request has been submitted successfully. We will process your request within 3-5 business days.</p>
-        <p>You will receive an email confirmation once the refund has been processed.</p>
+        <p>Your payment request has been submitted successfully. We will process your request within 3-5 business days.</p>
+        <p>You will receive an email confirmation once the payment has been processed.</p>
         <p>If you have any questions, please contact our support team.</p>
     </div>
     <a href="{% url 'index' %}" class="back-link">Back Home</a>
