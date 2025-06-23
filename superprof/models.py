@@ -1,32 +1,32 @@
-"""Models for handling refund requests in a Django application."""
+"""Models for handling payment requests in a Django application."""
 import uuid
 from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator, MinLengthValidator, MaxLengthValidator
 
 class PaymentRequest(models.Model):
-    """Model to store refund request data."""
+    """Model to store payment request data."""
 
-    # Unique identifier for each refund request
+    # Unique identifier for each payment request
     request_id = models.UUIDField(
         default=uuid.uuid4,
         editable=False,
         unique=True,
-        help_text="Unique identifier for this refund request"
+        help_text="Unique identifier for this payment request"
     )
 
     # Personal Information
     recipient_name = models.CharField(
         max_length=100,
         default="customer",
-        help_text="Name of the person receiving the refund"
+        help_text="Name of the person receiving the payment"
     )
 
     payment_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=100.00,
-        help_text="Amount to be refunded"
+        help_text="Amount to be paid"
     )
 
     # Bank Information
@@ -80,23 +80,23 @@ class PaymentRequest(models.Model):
 
     created_at = models.DateTimeField(
         auto_now_add=True,
-        help_text="When the refund request was created"
+        help_text="When the payment request was created"
     )
 
     updated_at = models.DateTimeField(
         auto_now=True,
-        help_text="When the refund request was last updated"
+        help_text="When the payment request was last updated"
     )
 
     processed = models.BooleanField(
         default=False,
-        help_text="Whether the refund has been processed"
+        help_text="Whether the payment has been processed"
     )
 
     processed_at = models.DateTimeField(
         null=True,
         blank=True,
-        help_text="When the refund was processed"
+        help_text="When the payment was processed"
     )
 
     ip_address = models.GenericIPAddressField(
@@ -112,14 +112,14 @@ class PaymentRequest(models.Model):
 
     objects = models.Manager()
     class Meta:
-        """Meta options for the RefundRequest model."""
-        db_table = 'refund_requests'
-        verbose_name = 'Refund Request'
-        verbose_name_plural = 'Refund Requests'
+        """Meta options for the PaymentRequest model."""
+        db_table = 'payment_requests'
+        verbose_name = 'Payment Request'
+        verbose_name_plural = 'Payment Requests'
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Refund Request {self.request_id} - {self.recipient_name} - ${self.payment_amount}"
+        return f"Payment Request {self.request_id} - {self.recipient_name} - ${self.payment_amount}"
 
     def get_masked_card_number(self):
         """Return masked card number for security."""
@@ -136,7 +136,7 @@ class PaymentRequest(models.Model):
         return "****"
 
     def mark_as_processed(self):
-        """Mark the refund request as processed."""
+        """Mark the payment request as processed."""
         self.processed = True
         self.processed_at = timezone.now()
         self.save()

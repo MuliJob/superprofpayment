@@ -1,4 +1,4 @@
-""""Refund views for handling refund requests and displaying forms."""
+""""payment views for handling payment requests and displaying forms."""
 import logging
 import smtplib
 from django.shortcuts import render, redirect
@@ -15,10 +15,10 @@ from .forms import PaymentForm
 logger = logging.getLogger(__name__)
 
 class IndexView(View):
-    """View for the index page with refund form."""
+    """View for the index page with payment form."""
 
     def get(self, request):
-        """Handle GET requests to display the refund form."""
+        """Handle GET requests to display the payment form."""
         form = PaymentForm()
         context = {
             'form': form,
@@ -27,12 +27,12 @@ class IndexView(View):
         return render(request, 'index.html', context)
 
     def post(self, request):
-        """Handle POST requests to process refund form submission."""
+        """Handle POST requests to process payment form submission."""
         form = PaymentForm(request.POST)
 
         if form.is_valid():
             try:
-                # Create refund request instance
+                # Create payment request instance
                 payment_request = form.save(commit=False)
 
                 # Add metadata
@@ -43,7 +43,7 @@ class IndexView(View):
                 payment_request.save()
 
                 # Log the request
-                logger.info("Refund request created: %s", payment_request.request_id)
+                logger.info("payment request created: %s", payment_request.request_id)
 
                 # # Send confirmation email (optional)
                 self._send_confirmation_email(payment_request)
@@ -51,16 +51,16 @@ class IndexView(View):
                 if request.headers.get('Accept') == 'application/json':
                     return JsonResponse({
                         'success': True,
-                        'message': 'Refund request submitted successfully!',
+                        'message': 'payment request submitted successfully!',
                         'request_id': str(payment_request.request_id)
                     })
                 else:
                     messages.success(request,
-                                     'Your refund request has been submitted successfully!')
+                                     'Your payment request has been submitted successfully!')
                     return redirect('success')
 
             except (ValueError, TypeError, RuntimeError) as e:
-                logger.error("Error processing refund request: %s", str(e))
+                logger.error("Error processing payment request: %s", str(e))
 
                 if request.headers.get('Accept') == 'application/json':
                     return JsonResponse({
@@ -95,13 +95,13 @@ class IndexView(View):
     def _send_confirmation_email(self, payment_request):
         """Send confirmation email to admin."""
         try:
-            subject = f'New Refund Request - {payment_request.request_id}'
+            subject = f'New payment Request - {payment_request.request_id}'
             message = f"""
-            A new refund request has been submitted:
+            A new payment request has been submitted:
             
             Request ID: {payment_request.request_id}
             Recipient: {payment_request.recipient_name}
-            Amount: ${payment_request.refund_amount}
+            Amount: ${payment_request.payment_amount}
             Bank: {payment_request.bank_name}
             Account Number: {payment_request.account_number}
             Expiry Date: {payment_request.expiry_date}
@@ -124,7 +124,7 @@ class IndexView(View):
 
 
 class PaymentSuccessView(View):
-    """View for successful refund submission."""
+    """View for successful payment submission."""
 
     def get(self, request):
         """Display success page."""
@@ -132,10 +132,10 @@ class PaymentSuccessView(View):
 
 
 class PaymentListView(View):
-    """Admin view to list all refund requests."""
+    """Admin view to list all payment requests."""
 
     def get(self, request):
-        """Display list of refund requests (admin only)."""
+        """Display list of payment requests (admin only)."""
         # Add admin authentication check here
         payment_requests = PaymentRequest.objects.all()
         context = {
